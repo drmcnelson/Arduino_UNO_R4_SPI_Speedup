@@ -1,7 +1,7 @@
 # Arduino_UNO_R4_SPI_Speedup
 Patch the Arduino SPI library, true 16 bit transfers and add loop-friendly API
 
-CAVEAT:  WORK IN PROGRESS
+CAVEAT:  WORK IN PROGRESS  - we are still find bugs and errors inherited from the original code.
 
 This repo provides a version of the SPI libarary for the Arduio UNO R4, which uses the  Renesas RA4M1 processor.
 
