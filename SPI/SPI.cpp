@@ -531,9 +531,10 @@ void ArduinoSPI::configSpi(arduino::SPISettings const & settings)
 
     uint32_t sppcr  = 0;
     /* set MOSI idle value to low */
+    /*
     sppcr |= R_SPI0_SPPCR_MOIFE_Msk;
     _spi_ctrl.p_regs->SPPCR = (uint8_t) sppcr;
-
+    /*
     /* configure bit rate */
     _spi_ctrl.p_regs->SPBR = (uint8_t) spck_div.spbr;
 
