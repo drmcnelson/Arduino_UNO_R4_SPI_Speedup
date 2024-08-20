@@ -1,8 +1,6 @@
 # Arduino_UNO_R4_SPI_Speedup
 Patch the Arduino SPI library, true 16 bit transfers and add loop-friendly API
 
-CAVEAT:  WORK IN PROGRESS  - we are still finding errors inherited from the original code. The legacy transfers are working,  we are still working on the new transfer16 capability.  Please stand by.
-
 This repo provides a version of the SPI libarary for the Arduio UNO R4, which uses the  Renesas RA4M1 processor.
 
 In the standard distribution, 16 bit transfers are done as back to back byte transfers, with a 1.2 usec setup time and 1.2 usec lost between transfers.  The transfer takes 4.8 usec to complete
@@ -16,6 +14,10 @@ For the loop-friendly calls, setup inside the loop is reduced to 600 nsec and ea
 Simple installation, just copy SPI.cpp and SPI.h into your directory  packages/arduino/hardware/renesas_uno/1.2.0/libraries/SPI/
 
 You may want to rename the files that are already there to something lile SPI.cpp_keep, SPI.h_keep
+
+### Some things to be aware of.
+
+In the original library, the idle state for MOSI was set to low.  That is corrected in this library.  It is now high when idle.   However, accessing the control register to setup 16 bit transfers, seems to cause MOSI to go low for a moment.  If you need to avoid that, you can try the three cals for loop friendly transfers; call SPI.transfer16_setup() and then call SPI.transfer16_transfer() for your transfers. When you are done, if you want to reset to 8 bit, call SPI.transfer16_cleanup().
 
 ### Orginal SPI.transfer16() as two one byte transfers.
 Here is a scope trace of the original SPI.tansfer16().  The top trace is the SPI clock, the lower trace is a digital pin set high before the call and low immediately after.  As can be seen there is an extra 1.2 usec incurred by sending the data as two bytes.  The time after the clock stops is the time it takes for the SPI interface to return the received data to the calling routine.
