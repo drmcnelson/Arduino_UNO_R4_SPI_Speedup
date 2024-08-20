@@ -27,7 +27,7 @@ Here is a scope trace of the original SPI.tansfer16().  The top trace is the SPI
 <img src="https://github.com/drmcnelson/Arduino_UNO_R4_SPI_Speedup/blob/main/Images/UNO_R4_SPI_original.JPG" width="50%">
 
 ### New implementation as a single 16 bit transfer
-Here is a scope trace of the new SPI.tansfer16(), now implemented as a single 16 bit transfer.  Again the top trace is the SPI clock, the lower trace is a digital pin set high before the call and low immediately after.  As can be seen the transfer not takes 3.6usec to complete.
+Here is a scope trace of the new SPI.tansfer16(), now implemented as a single 16 bit transfer.  Again the top trace is the SPI clock, the lower trace is a digital pin set high before the call and low immediately after.  As can be seen the transfer now takes 3.6usec to complete.
 
 <img src="https://github.com/drmcnelson/Arduino_UNO_R4_SPI_Speedup/blob/main/Images/UNOR4_SPI_speedup.JPG" width="50%">
 
