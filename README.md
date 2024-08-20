@@ -9,7 +9,7 @@ In this version, the SPI.transfer16(uint16_t data) is implemented as a single 16
 
 For transfers inside a loop, there are three new calls,  SPI.transfer16_setup(), SPI.transfer16_transfer(uint16_t data), and SPI.tansfer16_cleanup().  The transfer starts (the clock starts) at 600 nsec into the call, and each transfer takes 2.4 usec to complete.
 
-If you somehow want the old 16 bit transfer, that is as two bytes,  it is still there, now as SPI.transfer16_asbytes().
+If you want the old transfer16(), which transferd 16 bits as two one byte transfers,  it is still there.  It is now called SPI.transfer16_asbytes().
 
 ## Some things to be aware of.
 
