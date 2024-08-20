@@ -268,7 +268,7 @@ uint16_t ArduinoSPI::transfer16_setup()
 {
   if (!_is_sci) {
     _spi_ctrl.p_regs->SPCR_b.SPE = 0; /* disable SPI unit */
-    _spi_ctrl.p_regs->SPDCR = R_SPI0_SPDCR_SPLW_Msk; /* SPI word access */
+    _spi_ctrl.p_regs->SPDCR = 0; /* SPI half word access */
     _spi_ctrl.p_regs->SPCMD_b[0].SPB = 0x0F; /* spi bit width = 16 */
     _spi_ctrl.p_regs->SPCR_b.SPE = 1; /* enable SPI unit */
   }
