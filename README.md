@@ -15,9 +15,15 @@ Simple installation, just copy SPI.cpp and SPI.h into your directory  packages/a
 
 You may want to rename the files that are already there to something lile SPI.cpp_keep, SPI.h_keep
 
-### Some things to be aware of.
+## Some things to be aware of.
 
+### File names
+The source files in the repo are named SPI.cpp and SPI.h.   There are the same as the standard SPI library in the Arduino distribution.   The intention is that these take the place of the original files for the UNOR$.  You may want to remove or renam the originals for the UNO R4 in your arduino tree.  On my computer, Fedora with Cinnamon desktop, they are located at ~/.arduino15/packages/arduino/hardware/renesas_uno/1.2.0/libraries/SPI,  The version number may be different on your Linux machine.
+
+### MOSI idle
 In the original library, the idle state for MOSI was set to low.  That is corrected in this library.  It is now high when idle.   However, accessing the control register to setup 16 bit transfers, seems to cause MOSI to go low for a moment.  If you need to avoid that, you can try the three cals for loop friendly transfers; call SPI.transfer16_setup() and then call SPI.transfer16_transfer() for your transfers. When you are done, if you want to reset to 8 bit, call SPI.transfer16_cleanup().
+
+## Comparison of old and new 16 bit transfers
 
 ### Orginal SPI.transfer16() as two one byte transfers.
 Here is a scope trace of the original SPI.tansfer16().  The top trace is the SPI clock, the lower trace is a digital pin set high before the call and low immediately after.  As can be seen there is an extra 1.2 usec incurred by sending the data as two bytes.  The time after the clock stops is the time it takes for the SPI interface to return the received data to the calling routine.
