@@ -211,6 +211,7 @@ uint8_t ArduinoSPI::transfer(uint8_t data)
 uint16_t ArduinoSPI::transfer16(uint16_t data)
 {
     uint16_t rxbuf;
+    uint16_t tmp16;
 
     if (_is_sci) {
         _spi_cb_event[_cb_event_idx] = SPI_EVENT_TRANSFER_ABORTED;
@@ -241,12 +242,17 @@ uint16_t ArduinoSPI::transfer16(uint16_t data)
       _spi_ctrl.p_regs->SPCMD_b[0].SPB = 0x0F; /* spi bit width = 16 */
       _spi_ctrl.p_regs->SPCR_b.SPE = 1; /* enable SPI unit */
       
-      while (!_spi_ctrl.p_regs->SPSR_b.SPTEF){}
-      _spi_ctrl.p_regs->SPDR = data;
+      //while (!_spi_ctrl.p_regs->SPSR_b.SPTEF){}
+      _spi_ctrl.p_regs->SPDR_HA = data;
 
       while (!_spi_ctrl.p_regs->SPSR_b.SPRF){}
-      rxbuf = _spi_ctrl.p_regs->SPDR;
+      rxbuf = _spi_ctrl.p_regs->SPDR_HA;
 
+      if (!_settings.getBitOrder() == LSBFIRST) {
+        tmp16 = ((rxbuf & 0xff) << 8) | ((rxbuf & 0xff00) >> 8);
+        rxbuf = tmp16;
+      }
+      
       _spi_ctrl.p_regs->SPCR_b.SPE = 0; /* disable SPI unit */
       _spi_ctrl.p_regs->SPDCR = R_SPI0_SPDCR_SPBYT_Msk; /* SPI byte access */
       _spi_ctrl.p_regs->SPCMD_b[0].SPB = 7; /* spi bit width = 8 */
@@ -276,19 +282,25 @@ uint16_t ArduinoSPI::transfer16_setup()
 
 uint16_t ArduinoSPI::transfer16_transfer(uint16_t data)
 {
-  uint16_t rxbuf;
+  uint16_t rxbuf = 0;
+  uint16_t tmp16 = 0;
   if (_is_sci) {
     return transfer16(data);
   }
   else {
-    while (!_spi_ctrl.p_regs->SPSR_b.SPTEF){}
-
-    _spi_ctrl.p_regs->SPDR = data;
+    
+    //while (!_spi_ctrl.p_regs->SPSR_b.SPTEF){}
+    _spi_ctrl.p_regs->SPDR_HA = data;
       
     while (!_spi_ctrl.p_regs->SPSR_b.SPRF){}
-      
-    rxbuf = _spi_ctrl.p_regs->SPDR;
+    rxbuf =  _spi_ctrl.p_regs->SPDR_HA;
+
+    if (!_settings.getBitOrder() == LSBFIRST) {
+      tmp16 = ((rxbuf & 0xff) << 8) | ((rxbuf & 0xff00) >> 8);
+      rxbuf = tmp16;
+    }
   }
+  return rxbuf;
 }
 
 uint16_t ArduinoSPI::transfer16_cleanup()
