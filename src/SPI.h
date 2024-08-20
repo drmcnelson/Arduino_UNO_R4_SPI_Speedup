@@ -14,7 +14,7 @@
 #ifndef _SPI_H_INCLUDED
 #define _SPI_H_INCLUDED
 
-#define HAS_SPI_SPEEDUP
+#define _SPI_H_TRANSFER16_FIXED
 
 /**************************************************************************************
  * INCLUDE

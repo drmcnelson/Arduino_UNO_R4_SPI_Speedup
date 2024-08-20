@@ -230,19 +230,22 @@ uint16_t ArduinoSPI::transfer16(uint16_t data)
     }
     else
     {
+
+      /*
+      Serial.print( "transfer16, data");
+      Serial.println( data, HEX);
+      */
+      
       _spi_ctrl.p_regs->SPCR_b.SPE = 0; /* disable SPI unit */
-      _spi_ctrl.p_regs->SPDCR = R_SPI0_SPDCR_SPLW_Msk; /* SPI word access */
+      _spi_ctrl.p_regs->SPDCR = 0; /* SPI half word access */
       _spi_ctrl.p_regs->SPCMD_b[0].SPB = 0x0F; /* spi bit width = 16 */
       _spi_ctrl.p_regs->SPCR_b.SPE = 1; /* enable SPI unit */
-
+      
       while (!_spi_ctrl.p_regs->SPSR_b.SPTEF){}
-
       _spi_ctrl.p_regs->SPDR = data;
 
       while (!_spi_ctrl.p_regs->SPSR_b.SPRF){}
-      
       rxbuf = _spi_ctrl.p_regs->SPDR;
-
 
       _spi_ctrl.p_regs->SPCR_b.SPE = 0; /* disable SPI unit */
       _spi_ctrl.p_regs->SPDCR = R_SPI0_SPDCR_SPBYT_Msk; /* SPI byte access */
@@ -534,7 +537,8 @@ void ArduinoSPI::configSpi(arduino::SPISettings const & settings)
     /*
     sppcr |= R_SPI0_SPPCR_MOIFE_Msk;
     _spi_ctrl.p_regs->SPPCR = (uint8_t) sppcr;
-    /*
+    */
+
     /* configure bit rate */
     _spi_ctrl.p_regs->SPBR = (uint8_t) spck_div.spbr;
 
