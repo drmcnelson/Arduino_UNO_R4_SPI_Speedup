@@ -7,18 +7,14 @@ In the standard distribution, 16 bit transfers are done as back to back byte tra
 
 In this version, the SPI.transfer16(uint16_t data) is implemented as a single 16 bit transfer.  Setup is still 1.2usec, but the transfer takes 3.6 usec to complete.
 
-For transfers inside a loop, there are three new calls,  SPI.transfer16_setup(), SPI.transfer16_transfer(uint16_t data), and SPI.tansfer16_cleanup().
+For transfers inside a loop, there are three new calls,  SPI.transfer16_setup(), SPI.transfer16_transfer(uint16_t data), and SPI.tansfer16_cleanup().  The transfer starts (the clock starts) at 600 nsec into the call, and each transfer takes 2.4 usec to complete.
 
-For the loop-friendly calls, setup inside the loop is reduced to 600 nsec and each transfer takes 2.4 usec to complete.
-
-Simple installation, just copy SPI.cpp and SPI.h into your directory  packages/arduino/hardware/renesas_uno/1.2.0/libraries/SPI/
-
-You may want to rename the files that are already there to something lile SPI.cpp_keep, SPI.h_keep
+If you somehow want the old 16 bit transfer, that is as two bytes,  it is still there, now as SPI.transfer16_asbytes().
 
 ## Some things to be aware of.
 
 ### File names
-The source files in the repo are named SPI.cpp and SPI.h.   There are the same as the standard SPI library in the Arduino distribution.   The intention is that these take the place of the original files for the UNOR$.  You may want to remove or renam the originals for the UNO R4 in your arduino tree.  On my computer, Fedora with Cinnamon desktop, they are located at ~/.arduino15/packages/arduino/hardware/renesas_uno/1.2.0/libraries/SPI,  The version number may be different on your Linux machine.
+The source files in the repo are named SPI.cpp and SPI.h.   There are the same as the standard SPI library in the Arduino distribution.   The intention is that these take the place of the original files for the UNOR4.  You may want to remove or renam the originals for the UNO R4 in your arduino tree.  On my computer, Fedora with Cinnamon desktop, they are located at ~/.arduino15/packages/arduino/hardware/renesas_uno/1.2.0/libraries/SPI,  The version number may be different on your Linux machine.
 
 ### MOSI idle
 In the original library, the idle state for MOSI was set to low.  That is corrected in this library.  It is now high when idle.   However, accessing the control register to setup 16 bit transfers, seems to cause MOSI to go low for a moment.  If you need to avoid that, you can try the three cals for loop friendly transfers; call SPI.transfer16_setup() and then call SPI.transfer16_transfer() for your transfers. When you are done, if you want to reset to 8 bit, call SPI.transfer16_cleanup().
