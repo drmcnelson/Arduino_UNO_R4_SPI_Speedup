@@ -11,12 +11,6 @@ For transfers inside a loop, there are three new calls,  SPI.transfer16_setup(),
 
 If you want the old transfer16(), which transferred 16 bits as two one byte transfers,  it is still there.  It is now called SPI.transfer16_asbytes().
 
-## Some things to be aware of.
-
-### File names
-The source files in this repo are named SPI.cpp and SPI.h.  These names are the same as those in standard arduino supplied SPI library. The intent was to fix and upgrade the official library, i.e. replace those files.  On my machine, they are located at  ~/.arduino15/packages/arduino/hardware/renesas_uno/1.2.0/libraries/SPI.   The version number 1.2.0 may be different on your machine
-
-### MOSI idle
 In the original library, the idle state for MOSI was set to low.  That is corrected in this library.  It is now high when idle.   However, accessing the control register to setup 16 bit transfers, seems to cause MOSI to go low for a moment.  If you need to avoid that, you can try the three cals for loop friendly transfers; call SPI.transfer16_setup() and then call SPI.transfer16_transfer() for your transfers. When you are done, if you want to reset to 8 bit, call SPI.transfer16_cleanup().
 
 ## Comparison of old and new 16 bit transfers
